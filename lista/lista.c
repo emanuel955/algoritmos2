@@ -126,33 +126,33 @@ lista_iter_t *lista_iter_crear(lista_t *lista){
 bool lista_iter_avanzar(lista_iter_t *iter){
 	if(lista_iter_al_final(iter))return false;
 	iter -> anterior = iter -> actual;
-	iter -> actual = (iter -> actual) -> siguiente;
+	iter -> actual = iter -> actual -> siguiente;
 	return true;
 
 }
 void *lista_iter_ver_actual(const lista_iter_t *iter){
-	if (!iter -> actual)return NULL;
+	if (lista_iter_al_final(iter)) return NULL;
 	return iter -> actual -> dato;
 }
 bool lista_iter_al_final(const lista_iter_t *iter){
-	return !iter -> actual;
+	return iter -> actual == NULL;
 }
 void lista_iter_destruir(lista_iter_t *iter){
 	free(iter);
 }
 bool lista_iter_insertar(lista_iter_t *iter, void *dato){
-	nodo_t* nodo = crear_nodo(dato);
-	if(nodo == NULL) return false;
-	if(iter -> actual == iter -> list -> primero){
-		iter -> list -> primero = nodo;
+	nodo_t* nuevo = crear_nodo(dato);
+	if(nuevo == NULL) return false;
+	if(!iter -> actual || iter -> actual == iter -> list -> primero){
+		iter -> list -> primero = nuevo;
 	}else{
-		if(!lista_iter_al_final(iter)){
-			iter -> list -> ultimo = nodo;
-		iter -> anterior -> siguiente = nodo;
-		}
+		iter -> anterior -> siguiente = nuevo;
 	}
-	nodo -> siguiente = iter -> actual;
-	iter -> actual = nodo;
+	if(!iter-> actual || lista_iter_al_final(iter)){
+		iter -> list -> ultimo = nuevo;
+	}
+	nuevo -> siguiente = iter -> actual;
+	iter -> actual = nuevo;
 	iter -> list -> contador++;
 	return true;
 }

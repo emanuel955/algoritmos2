@@ -22,13 +22,14 @@ void imprimir_iter_externo(lista_t *lista){
 		void* elemento = lista_iter_ver_actual(iter);
 
 		posicion ++;
-		printf("%d. %p\n", posicion, elemento);
+		printf("POS = %d. ACT = %d\n", posicion, *(int*) elemento);
 
 		if(posicion == 1){
 			//prueba al principio
 			print_test("inserto el primer elemento",lista_iter_insertar(iter,&m)== true);
 			print_test("elimino el primer elemento",lista_iter_borrar(iter) == &m);
 			print_test("inserto el primer elemento",lista_iter_insertar(iter,&m)== true);
+			print_test("actual es m = 8", lista_iter_ver_actual(iter)==&m);
 		}
 		if(posicion == lista_largo(lista)/2){
 			//prueba en la mitad
@@ -42,9 +43,12 @@ void imprimir_iter_externo(lista_t *lista){
 			print_test("inserto al final",lista_iter_insertar(iter,&v[x])== true);
 			print_test("elimino el ultimo",lista_iter_borrar(iter) == &v[x]);
 			print_test("inserto el en final",lista_iter_insertar(iter,&v[x])== true);
+			x++;
+			posicion++;
 		}
 		lista_iter_avanzar(iter);
 	}
+
 	printf("hay %d elementos\n", posicion);
 	lista_iter_destruir(iter);
 }
@@ -138,9 +142,11 @@ void pruebas_con_valores(){
 	print_test("Prueba inserta primero con elemento g", lista_insertar_primero(lista,&p) == true);
 
 	//iterador con dos elementos en la lista [p='g',d=5]
+	printf("COMIENZA EL ITERADOR\n");
 	imprimir_iter_externo(lista);
-	print_test("prueba largo con 6", lista_largo(lista) == 6); //[v[0]=1,v[1]=2,m=3,p='g',d=5
-	print_test("prueba ver_ultimo con el elemento 2", lista_ver_ultimo(lista) == &v[2]);
+	print_test("prueba largo con 6", lista_largo(lista) == 6); //[v[0]=1,v[1]=2,m=3,p='g',v[2]=3,d=5, ,
+	print_test("prueba ver_ultimo con el elemento 5", lista_ver_ultimo(lista) == &d);
+	printf("ver prim = %d,%d\n", *(int*)lista_ver_primero(lista),*(int*) lista_ver_ultimo(lista) );
 	print_test("prueba ver primero con el elemento 0", lista_ver_primero(lista) == &v[0]);
 
 	imprimir_iter_interno(lista);
