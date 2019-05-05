@@ -29,7 +29,8 @@ char *substr(const char *str, size_t n){
 /***************************************************
 *			FUNCIONES AUXILIARES				   *
 ***************************************************/
-size_t obtener_cantidad_separadores(const char *str, char sep){
+size_t obtener_cantidad_posiciones(const char *str, char sep){
+	//obtiene la cantidad de posiciones para el vector
 	size_t elementos = 1;
 	for(size_t i = 0; i < strlen(str); ++i){
 		if(str[i] == sep) elementos++;
@@ -37,20 +38,21 @@ size_t obtener_cantidad_separadores(const char *str, char sep){
 	return elementos;
 }
 
-size_t cantidad_elementos(char** strv){
-	size_t contador = 0;
+size_t cantidad_separadores(char** strv){
+	//obtiene la cantidad de separadores que necesita la cadena
+	int contador = -1;
 	for(size_t i = 0; strv[i] != NULL; i++){
-		contador += strlen(strv[i]);
-		contador++; //para los sep + Null
+		contador++;
 	}
-	return contador;
+	return (size_t)contador;
 
 }
 /***************************************************
 *			FUNCIONES STR 						   *
 ***************************************************/
 char **split(const char *str, char sep){
-	size_t cantidad = obtener_cantidad_separadores(str,sep);
+	size_t cantidad = obtener_cantidad_posiciones(str,sep);
+	printf("cant = %ld\n", cantidad );
 
 	char** strv = malloc(sizeof(char*) * (cantidad + 1));
 	if(strv == NULL) return NULL;
@@ -73,13 +75,20 @@ char **split(const char *str, char sep){
 }
 /***********************************************************/
 char *join(char **strv, char sep){
-	size_t contador = cantidad_elementos(strv);
-	char* cadena = malloc(sizeof(char) * (contador + 1));
+	size_t separadores = cantidad_separadores(strv);
+	char* cadena = malloc(sizeof(char) * (sizeof(strv) + separadores));
 	if(cadena == NULL) return NULL;
+	cadena[0]= '\0';
 
+	size_t posicion = 0;
 	for(size_t i = 0; strv[i] != NULL; i++){
 		strcat(cadena,strv[i]);
-		if(i < *(int*)(strlen(*strv) -1)) strcat(cadena,&sep);
+		posicion += strlen(strv[i]);
+		if(i < separadores){
+			cadena[posicion] = sep;
+			posicion++;
+			cadena[posicion] = '\0';
+		}	
 	}
 	return cadena;
 }
@@ -108,60 +117,76 @@ int main(){
 	char* r = substr("", 4);
 	printf("%s\n", r);
 	
-	*/
+	
 	char** str = split("abc,,def", ',');//  →  ["abc", "", "def"]
 	for(size_t i = 0; str[i] != NULL;i++){
-		printf("oka =%ld\n", strlen(str[i]));
 		printf("%s\n", str[i]);
-		size_t t = sizeof(str)/sizeof(char);
-		printf("vb %ld\n", t);
 	}
-	printf("por = %ld\n", sizeof(str));
 	printf("-----------\n");
 	char* p = join(str,',');
 	printf("%s\n", p );
 	free_strv(str);
+	free(p);
 	printf("-----------\n");
-	/*
 	char** str1 = split("abc,def,", ',');//  →  ["abc", "def", ""]
 	for(int i = 0; str1[i] != NULL;i++){
 		printf("%s\n", str1[i]);
-		free(str1[i]);
 	}
-	free(str1);
+	char* m = join(str1,',');
+	printf("%s\n", m );
+	free_strv(str1);
+	free(m);
 	printf("////////////\n");
 	
 	char** str3 = split(",abc,def", ',');//  →  ["", "abc", "def"]
 	for(int i = 0; str3[i] != NULL;i++){
 		printf("%s\n", str3[i]);
-		free(str3[i]);
 	}
-	free(str3);
+	char* b = join(str3,',');
+	printf("%s\n", b );
+	free_strv(str3);
+	free(b);
 	printf("------------\n");
 	
 	char** str4 = split("abc", '\0');//      →  ["abc"]
 	for(int i = 0; str4[i] != NULL;i++){
 		printf("%s\n", str4[i]);
-		free(str4[i]);
 	}
-	free(str4);
+	char* c = join(str4,',');
+	printf("%s\n", c );
+	free_strv(str4);
+	free(c);
 	printf("----------------\n");
 	
 	char** str5 = split("", ',');//  →  [""]
 	for(int i = 0; str5[i] != NULL;i++){
 		printf("%s\n", str5[i]);
-		free(str5[i]);
 	}
-	free(str5);
+	char* z = join(str5,',');
+	printf("%s\n", z );
+	free_strv(str5);
+	free(z);
 	printf("------------------\n");
-	
+
 	char** str6 = split(",", ',');// →  ["", ""]
 	for(int i = 0; str6[i] != NULL;i++){
 		printf("impi%s\n", str6[i]);
-		free(str6[i]);
 	}
-	free(str6);
+	char* k = join(str6,',');
+	printf("%s\n", k );
+	free_strv(str6);
+	free(k);
 	*/
+
+	//----------------------
+	//join([], ',')               →  "" // Join de arreglo vacío, {NULL} en C.
+	char* q[] = {NULL};
+	char* d = join(q,',');
+	printf("%s\n", d);
+	free(d);
+	//join(["abc", "def"], '\0')  →  "abcdef"
+
+
 	
 }
 	
