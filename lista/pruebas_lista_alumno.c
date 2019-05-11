@@ -36,16 +36,21 @@ void imprimir_iter_externo(lista_t *lista){
 			print_test("inserto en la mitad",lista_iter_insertar(iter,&v[0+x])== true);
 			print_test("elimino el de la mitad",lista_iter_borrar(iter) == &v[0+x]);
 			print_test("inserto el la mitad",lista_iter_insertar(iter,&v[0+x])== true);
+			print_test("actual es v =", lista_iter_ver_actual(iter)==&v[0+x]);
 			x++;
 		}
 		if(posicion == lista_largo(lista)){
 			//prueba al final
 			print_test("inserto al final",lista_iter_insertar(iter,&v[x])== true);
-			print_test("elimino el ultimo",lista_iter_borrar(iter) == &v[x]);
+			lista_iter_avanzar(iter);
+			//------------------------------
+			print_test("elimino el ultimo",lista_iter_borrar(iter) == &d);
+			x++;
 			print_test("inserto el en final",lista_iter_insertar(iter,&v[x])== true);
 			x++;
 			posicion++;
 		}
+		printf("ultimo = %d\n", *(int*) lista_ver_ultimo(lista));
 		lista_iter_avanzar(iter);
 	}
 
@@ -57,17 +62,23 @@ void imprimir_iter_externo(lista_t *lista){
  * *****************************************************************/
 bool imprimir_dato(void *elemento, void *extra)
 {
+	if(extra){
+		*(int*) extra += *(int*)elemento;
+	}
     
     printf("%d\n", *(int*)elemento);
 
     return true; // seguir iterando
 }
 
+
 void imprimir_iter_interno(lista_t *lista)
 {
-	
-    lista_iterar(lista, imprimir_dato, NULL);
+	int suma = 0;
+    lista_iterar(lista, imprimir_dato, &suma);
+    printf("suma == %d\n", suma);
 }
+
 /* ******************************************************************
  *                   PRUEBAS UNITARIAS ALUMNO
  * *****************************************************************/
@@ -123,8 +134,6 @@ void pruebas_valor_null(){
 	lista_destruir(lista,NULL);
 }
 
-
-
 void pruebas_con_valores(){
 	printf("PRUEBAS LISTA CON VALORES \n");
 	lista_t* lista = lista_crear();
@@ -144,17 +153,16 @@ void pruebas_con_valores(){
 	//iterador con dos elementos en la lista [p='g',d=5]
 	printf("COMIENZA EL ITERADOR\n");
 	imprimir_iter_externo(lista);
-	print_test("prueba largo con 6", lista_largo(lista) == 6); //[v[0]=1,v[1]=2,m=3,p='g',v[2]=3,d=5, ,
-	print_test("prueba ver_ultimo con el elemento 5", lista_ver_ultimo(lista) == &d);
-	printf("ver prim = %d,%d\n", *(int*)lista_ver_primero(lista),*(int*) lista_ver_ultimo(lista) );
+	print_test("prueba largo con 6", lista_largo(lista) == 6); //[v[0]=1,v[1]=2,m=3,p='g',v[2]=3,v[3]=4
+	print_test("prueba ver_ultimo con el elemento 5", lista_ver_ultimo(lista) == &v[3]);
 	print_test("prueba ver primero con el elemento 0", lista_ver_primero(lista) == &v[0]);
 
 	imprimir_iter_interno(lista);
 
 	lista_destruir(lista,NULL);
 
-
 }
+
 void pruebas_borrar(){
 	lista_t* lista = lista_crear();
 	lista_iter_t *iter = lista_iter_crear(lista);
@@ -168,7 +176,7 @@ void pruebas_borrar(){
 		contador = 0;
 
 		if(contador <= 4){
-			printf("elimino el primer elemento%d\n",*(int*)lista_iter_borrar(iter));
+			printf("elimino el primer elemento = %d\n",*(int*)lista_iter_borrar(iter));
 
 			lista_iter_avanzar(iter);
 			continue;
@@ -228,4 +236,5 @@ void pruebas_lista_alumno() {
     pruebas_volumen();
     pruebas_punteros_dinamicos();
     pruebas_borrar();
+    
 }

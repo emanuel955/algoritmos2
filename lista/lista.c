@@ -143,7 +143,7 @@ void lista_iter_destruir(lista_iter_t *iter){
 bool lista_iter_insertar(lista_iter_t *iter, void *dato){
 	nodo_t* nuevo = crear_nodo(dato);
 	if(nuevo == NULL) return false;
-	if(!iter -> actual || iter -> actual == iter -> list -> primero){
+	if(iter -> actual == iter -> list -> primero){
 		iter -> list -> primero = nuevo;
 	}else{
 		iter -> anterior -> siguiente = nuevo;
@@ -161,15 +161,12 @@ void *lista_iter_borrar(lista_iter_t *iter){
 	void* dato = iter -> actual -> dato;
 	nodo_t* borrar = iter -> actual;
 	if(iter -> actual == iter->list -> primero){
-		void* valor = lista_borrar_primero(iter -> list);
-		iter -> actual = iter -> list -> primero;
-		return valor;
-	}else if(iter -> actual == iter -> list -> ultimo){
-		iter -> anterior -> siguiente = iter -> actual -> siguiente;
-		iter -> list -> ultimo = iter -> anterior;
-		iter -> actual = iter -> anterior -> siguiente;
-		
+		iter -> actual = iter -> actual -> siguiente;
+		iter -> list -> primero = iter -> actual;
 	}else{
+		if(iter -> actual == iter -> list -> ultimo){
+			iter -> list -> ultimo = iter -> anterior;;
+		}
 		iter -> anterior -> siguiente = iter -> actual -> siguiente;
 		iter -> actual = iter -> anterior -> siguiente;
 	}
@@ -183,13 +180,13 @@ void *lista_iter_borrar(lista_iter_t *iter){
  * *****************************************************************/
 
 void lista_iterar(lista_t *lista, bool visitar(void *dato, void *extra), void *extra){
-	lista_iter_t* iter = lista_iter_crear(lista);
 
-	while(iter -> actual){
-		void* valor = lista_iter_ver_actual(iter);
+	nodo_t* actual = lista -> primero;
+
+	while(actual){
+		void* valor = actual -> dato;
 		bool estado = visitar(valor,extra);
 		if(!estado) break;
-		iter -> actual = iter -> actual -> siguiente;
+		actual = actual -> siguiente;
 	}
-	lista_iter_destruir(iter);
 }
