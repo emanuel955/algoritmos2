@@ -83,7 +83,7 @@ void imprimir_iter_interno(lista_t *lista)
  *                   PRUEBAS UNITARIAS ALUMNO
  * *****************************************************************/
 #define VACIO NULL //no es dato
-void pruebas_crear_lista_vacia(){
+/*void pruebas_crear_lista_vacia(){
 	printf("PRUEBAS LISTA VACIA\n");
 	lista_t* lista = lista_crear();
 	print_test("Prueba esta_vacia sin elementos", lista_esta_vacia(lista) == true);
@@ -153,7 +153,7 @@ void pruebas_con_valores(){
 	//iterador con dos elementos en la lista [p='g',d=5]
 	printf("COMIENZA EL ITERADOR\n");
 	imprimir_iter_externo(lista);
-	print_test("prueba largo con 6", lista_largo(lista) == 6); //[v[0]=1,v[1]=2,m=3,p='g',v[2]=3,v[3]=4
+	print_test("prueba largo con 6", lista_largo(lista) == 6); //[v[0]=1,v[1]=2,m=8,p='g',v[2]=3,v[3]=4
 	print_test("prueba ver_ultimo con el elemento 5", lista_ver_ultimo(lista) == &v[3]);
 	print_test("prueba ver primero con el elemento 0", lista_ver_primero(lista) == &v[0]);
 
@@ -161,7 +161,7 @@ void pruebas_con_valores(){
 
 	lista_destruir(lista,NULL);
 
-}
+}*/
 
 void pruebas_borrar(){
 	lista_t* lista = lista_crear();
@@ -175,17 +175,94 @@ void pruebas_borrar(){
 	while(!lista_iter_al_final(iter)){
 		contador = 0;
 
-		if(contador <= 4){
+		if(contador < 5){
+			print_test("no esta al final", lista_iter_al_final(iter) == false);
 			printf("elimino el primer elemento = %d\n",*(int*)lista_iter_borrar(iter));
-
-			lista_iter_avanzar(iter);
-			continue;
 		}
 
 	}
+	print_test("primero null", lista_ver_primero(lista) == NULL);
+	print_test("ultimo null", lista_ver_ultimo(lista) == NULL);
+	print_test("ultimo null", lista_iter_ver_actual(iter) == NULL);
+	printf("largo=%ld",lista_largo(lista));
+
+
+	print_test("borrar cuando esta al final",lista_iter_borrar(iter) == NULL);
+	print_test("esta al final", lista_iter_al_final(iter) == true);
+
+	//----------------------------------------------------------------
+	print_test("lista inserto el primer elemento",lista_insertar_primero(lista,&v[0])== true);
+	print_test("esta al final", lista_iter_al_final(iter) == true);
+	print_test("elimino el primer elemento",lista_iter_borrar(iter) == NULL);
+	
+
+	print_test("primero null", lista_ver_primero(lista) == &v[0]);
+	print_test("ultimo null", lista_ver_ultimo(lista) == &v[0]);
+	print_test("ultimo null", lista_iter_ver_actual(iter) == NULL);
+
+	print_test("eliminar primero",lista_borrar_primero(lista) == &v[0]);
+	print_test("primero null", lista_ver_primero(lista) == NULL);
+	print_test("ultimo null", lista_ver_ultimo(lista) == NULL);
+	print_test("ultimo null", lista_iter_ver_actual(iter) == NULL);
+	printf("largo=%ld\n",lista_largo(lista));
+	//------------------------------------------------------------------
+	print_test("iter inserto el primer elemento",lista_iter_insertar(iter,&v[0])== true);
+	print_test("elimino el primer elemento",lista_iter_borrar(iter) == &v[0]);
+	print_test("esta al final", lista_iter_al_final(iter) == true);
+
+	print_test("primero null", lista_ver_primero(lista) == NULL);
+	print_test("ultimo null", lista_ver_ultimo(lista) == NULL);
+	print_test("act null", lista_iter_ver_actual(iter) == NULL);
+
+	//--------------------------------------------------------------------------
+
+	print_test("lista inserto el ultimo elemento",lista_insertar_ultimo(lista,&v[0])== true);
+	print_test("esta al final", lista_iter_al_final(iter) == true);
+	print_test("elimino el primer elemento",lista_iter_borrar(iter) == NULL);
+	
+
+	print_test("primero null", lista_ver_primero(lista) == &v[0]);
+	print_test("ultimo null", lista_ver_ultimo(lista) == &v[0]);
+	print_test("ultimo null", lista_iter_ver_actual(iter) == NULL);
+
+	print_test("eliminar primero",lista_borrar_primero(lista) == &v[0]);
+	print_test("primero null", lista_ver_primero(lista) == NULL);
+	print_test("ultimo null", lista_ver_ultimo(lista) == NULL);
+	print_test("ultimo null", lista_iter_ver_actual(iter) == NULL);
 
 	lista_iter_destruir(iter);
+
+	
 	lista_destruir(lista,NULL);
+
+}
+
+/*void pruebas_extras(){
+	lista_t* lista = lista_crear();
+
+	print_test("Prueba inserta primero con elemento g", lista_insertar_ultimo(lista,&v[0]) == true);
+	print_test("Prueba inserta primero con elemento g", lista_insertar_ultimo(lista,&v[1]) == true);
+	print_test("Prueba inserta primero con elemento g", lista_insertar_ultimo(lista,&v[2]) == true);
+
+	lista_iter_t *iter = lista_iter_crear(lista);
+
+	print_test("esta al final", lista_iter_al_final(iter) == false);
+	print_test("esta al final", lista_iter_al_final(iter) == false);
+	print_test("esta al final", lista_iter_al_final(iter) == false);
+
+	print_test("ver actual",lista_iter_ver_actual(iter)== &v[0]);
+	print_test("ver actual",lista_iter_avanzar(iter)== true);
+	print_test("ver actual",lista_iter_ver_actual(iter)== &v[1]);
+	print_test("borrar cuando esta al final",lista_iter_borrar(iter) == &v[1]);
+
+	print_test("el largo es 2", lista_largo(lista) == 2);
+	print_test("ver actual",lista_iter_ver_actual(iter)== &v[2]);
+	print_test("borrar cuando esta al final",lista_iter_borrar(iter) == &v[2]);
+	print_test("el largo es 2", lista_largo(lista) == 1);
+
+	lista_iter_destruir(iter);
+	lista_destruir(lista, NULL);
+
 
 }
 
@@ -225,16 +302,17 @@ void pruebas_punteros_dinamicos(){
 	print_test("se pudo guardar puntero", lista_insertar_ultimo(lista,r));
 	lista_destruir(lista,liberar);
 }
-
+*/
 void pruebas_lista_alumno() {
     lista_t* ejemplo = NULL;
 
     print_test("Puntero inicializado a NULL", ejemplo == NULL);
-    pruebas_crear_lista_vacia();
-    pruebas_valor_null();
-    pruebas_con_valores();
-    pruebas_volumen();
-    pruebas_punteros_dinamicos();
+    //pruebas_crear_lista_vacia();
+    //pruebas_valor_null();
+    //pruebas_con_valores();
+    //pruebas_extras();
+    //pruebas_volumen();
+    //pruebas_punteros_dinamicos();
     pruebas_borrar();
     
 }

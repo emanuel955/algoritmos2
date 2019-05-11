@@ -53,7 +53,7 @@ bool lista_insertar_primero(lista_t *lista, void *dato){
 	nodo_t* nodo = crear_nodo(dato);
 	if(nodo == NULL) return false;
 	if (lista -> primero){
-		nodo -> siguiente = lista -> primero;	
+		nodo -> siguiente = lista -> primero;
 	}else{
 		lista -> ultimo = nodo;
 	}
@@ -64,12 +64,16 @@ bool lista_insertar_primero(lista_t *lista, void *dato){
 bool lista_insertar_ultimo(lista_t *lista, void *dato){
 	nodo_t* nodo = crear_nodo(dato);
 	if(nodo == NULL) return false;
-	if(lista -> ultimo){
+	if(lista -> ultimo != NULL){
+		printf("entro7\n");
 		lista -> ultimo -> siguiente = nodo;
 	}else{
+		printf("entro1\n");
 		lista -> primero = nodo;
+		printf("salio2\n");
 	}
 	lista -> ultimo = nodo;
+	printf("entro3\n");
 	lista -> contador ++;
 	return true;
 }
@@ -143,7 +147,7 @@ void lista_iter_destruir(lista_iter_t *iter){
 bool lista_iter_insertar(lista_iter_t *iter, void *dato){
 	nodo_t* nuevo = crear_nodo(dato);
 	if(nuevo == NULL) return false;
-	if(iter -> actual == iter -> list -> primero){
+	if(!iter -> list -> primero || iter -> actual == iter -> list -> primero){
 		iter -> list -> primero = nuevo;
 	}else{
 		iter -> anterior -> siguiente = nuevo;
@@ -165,7 +169,7 @@ void *lista_iter_borrar(lista_iter_t *iter){
 		iter -> list -> primero = iter -> actual;
 	}else{
 		if(iter -> actual == iter -> list -> ultimo){
-			iter -> list -> ultimo = iter -> anterior;;
+			iter -> list -> ultimo = iter -> anterior;
 		}
 		iter -> anterior -> siguiente = iter -> actual -> siguiente;
 		iter -> actual = iter -> anterior -> siguiente;
