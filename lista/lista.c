@@ -65,15 +65,11 @@ bool lista_insertar_ultimo(lista_t *lista, void *dato){
 	nodo_t* nodo = crear_nodo(dato);
 	if(nodo == NULL) return false;
 	if(lista -> ultimo != NULL){
-		printf("entro7\n");
 		lista -> ultimo -> siguiente = nodo;
 	}else{
-		printf("entro1\n");
 		lista -> primero = nodo;
-		printf("salio2\n");
 	}
 	lista -> ultimo = nodo;
-	printf("entro3\n");
 	lista -> contador ++;
 	return true;
 }
@@ -165,8 +161,9 @@ void *lista_iter_borrar(lista_iter_t *iter){
 	void* dato = iter -> actual -> dato;
 	nodo_t* borrar = iter -> actual;
 	if(iter -> actual == iter->list -> primero){
-		iter -> actual = iter -> actual -> siguiente;
-		iter -> list -> primero = iter -> actual;
+		iter -> list -> primero = iter -> actual -> siguiente;
+		iter -> actual = iter -> list -> primero;
+		if(!iter -> actual) iter -> list -> ultimo = NULL;
 	}else{
 		if(iter -> actual == iter -> list -> ultimo){
 			iter -> list -> ultimo = iter -> anterior;

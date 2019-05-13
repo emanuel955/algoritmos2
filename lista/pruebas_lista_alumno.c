@@ -50,7 +50,6 @@ void imprimir_iter_externo(lista_t *lista){
 			x++;
 			posicion++;
 		}
-		printf("ultimo = %d\n", *(int*) lista_ver_ultimo(lista));
 		lista_iter_avanzar(iter);
 	}
 
@@ -83,7 +82,7 @@ void imprimir_iter_interno(lista_t *lista)
  *                   PRUEBAS UNITARIAS ALUMNO
  * *****************************************************************/
 #define VACIO NULL //no es dato
-/*void pruebas_crear_lista_vacia(){
+void pruebas_crear_lista_vacia(){
 	printf("PRUEBAS LISTA VACIA\n");
 	lista_t* lista = lista_crear();
 	print_test("Prueba esta_vacia sin elementos", lista_esta_vacia(lista) == true);
@@ -161,7 +160,7 @@ void pruebas_con_valores(){
 
 	lista_destruir(lista,NULL);
 
-}*/
+}
 
 void pruebas_borrar(){
 	lista_t* lista = lista_crear();
@@ -207,6 +206,11 @@ void pruebas_borrar(){
 	printf("largo=%ld\n",lista_largo(lista));
 	//------------------------------------------------------------------
 	print_test("iter inserto el primer elemento",lista_iter_insertar(iter,&v[0])== true);
+	print_test("primero 1", lista_ver_primero(lista) == &v[0]);
+	print_test("ultimo 1", lista_ver_ultimo(lista) == &v[0]);
+	print_test("act 1", lista_iter_ver_actual(iter) == &v[0]);
+
+
 	print_test("elimino el primer elemento",lista_iter_borrar(iter) == &v[0]);
 	print_test("esta al final", lista_iter_al_final(iter) == true);
 
@@ -237,7 +241,7 @@ void pruebas_borrar(){
 
 }
 
-/*void pruebas_extras(){
+void pruebas_extras(){
 	lista_t* lista = lista_crear();
 
 	print_test("Prueba inserta primero con elemento g", lista_insertar_ultimo(lista,&v[0]) == true);
@@ -302,17 +306,17 @@ void pruebas_punteros_dinamicos(){
 	print_test("se pudo guardar puntero", lista_insertar_ultimo(lista,r));
 	lista_destruir(lista,liberar);
 }
-*/
+
 void pruebas_lista_alumno() {
     lista_t* ejemplo = NULL;
 
     print_test("Puntero inicializado a NULL", ejemplo == NULL);
-    //pruebas_crear_lista_vacia();
-    //pruebas_valor_null();
-    //pruebas_con_valores();
-    //pruebas_extras();
-    //pruebas_volumen();
-    //pruebas_punteros_dinamicos();
+    pruebas_crear_lista_vacia();
+    pruebas_valor_null();
+    pruebas_con_valores();
+    pruebas_extras();
+    pruebas_volumen();
+    pruebas_punteros_dinamicos();
     pruebas_borrar();
     
 }
