@@ -34,7 +34,7 @@ pila_t* pila_crear(void){
 	
 	return pila;
 }
-bool vector_redimensionar(pila_t* pila, size_t tam_nuevo) {
+bool pila_redimensionar(pila_t* pila, size_t tam_nuevo) {
     void* datos_nuevo = realloc(pila->datos, tam_nuevo * sizeof(void*));
 
     if (datos_nuevo == NULL) {
@@ -56,7 +56,7 @@ bool pila_apilar(pila_t *pila, void* valor){
 	pila -> datos[pila -> cantidad] = valor;
 	pila -> cantidad ++;
 	if(pila -> cantidad == pila -> capacidad){
-		bool estado = vector_redimensionar(pila, AUMENTA * pila->capacidad);
+		bool estado = pila_redimensionar(pila, AUMENTA * pila->capacidad);
 		if(!estado) return false;
 	}
 	return true;
@@ -64,8 +64,7 @@ bool pila_apilar(pila_t *pila, void* valor){
 void* pila_desapilar(pila_t *pila){
 	if(pila_esta_vacia(pila)) return NULL;
 	if (pila -> cantidad == pila -> capacidad/REDUCE && pila -> cantidad / REDUCE > VALOR_INICIAL){
-		bool estado = vector_redimensionar(pila,pila->capacidad / REDUCE);
-		if(!estado) return false;
+		pila_redimensionar(pila,pila->capacidad / REDUCE);
 	}
 	pila -> cantidad --;
 	return pila -> datos[pila -> cantidad];
