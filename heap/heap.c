@@ -55,10 +55,10 @@ bool heap_redimensionar(heap_t* heap, size_t tam_nuevo) {
     heap->tam = tam_nuevo;
     return true;
 }
-void heapify(heap_t* heap, size_t cant){
+void heapify(void* arreglo[], size_t cant, cmp_func_t cmp){
 	size_t n = (cant / 2) - 1;
 	for(size_t i = n; i >= 0; i--){
-		downheap(heap -> datos, cant, i,heap -> cmp);
+		downheap(arreglo, cant, i,cmp);
 	}
 }
 
@@ -86,8 +86,10 @@ heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp){
 	if(!heap) return NULL;
 
 	for(size_t i = 0; i < n; i++){
-		heap_encolar(heap,arreglo[i]);
+		heap -> datos[i] = arreglo[i];
+		heap -> cant++;
 	}
+	heapify(heap -> datos,heap -> cant,cmp);
 	return heap;
 
 }
@@ -139,5 +141,9 @@ void *heap_ver_max(const heap_t *heap){
 /*			 heapsort							  */
 /**************************************************/
 void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp){
+	for(size_t i = cant - 1; i >= 0; i--){
+		swap(&elementos[0],&elementos[i]);
+		heapify(elementos,i,cmp);
+	}
 
 }
