@@ -12,18 +12,23 @@ void imprimir_br(int vector[]){
 	int corchetes[500];//vector donde se guarda la pos de los [
 	int pos_corchete = 0;
 
-	int w = 0;
+	//int w = 0;
 	for(int i = 0; vector[i] != '\n'; i++){
-		printf("%c || %d\n", vector[i],i);
+		//printf("%c || %d\n", vector[i],i);
 		if(vector[i] == '.')putchar(br_vector[pos]);
 		if(vector[i] == '>') pos++;
 		if(vector[i] == '<') pos--;
 		if(vector[i] == '+') br_vector[pos]++;
 		if(vector[i] == '-') br_vector[pos]--;
+		if(vector[i] == ',') 
 		if(vector[i] == '['){
 			if(br_vector[pos] == 0){
-				printf("entro aca\n");
-				while(vector[i] != ']'){
+				//printf("entro aca\n");
+				int cant_corch = 0;
+				while(true){
+					if(vector[i] == '[')cant_corch++;
+					if(vector[i] == ']')cant_corch--;
+					if(cant_corch == 0)break;
 					i++;
 					//aca esta el problema
 				}
@@ -32,19 +37,20 @@ void imprimir_br(int vector[]){
 			//guardo la pos del corchete inicial
 			//printf("por i [ = %d\n", i );
 			corchetes[pos_corchete] = i;
-			printf("-----------guardado el corchete = %d||%d\n", corchetes[pos_corchete],pos_corchete);
+			//printf("-----------guardado el corchete = %d||%d\n", corchetes[pos_corchete],pos_corchete);
 			pos_corchete++;
 		}
 		if(vector[i] == ']'){
 			//si br_vector se encuentra en 0 no vuelve al inicio del [
 			if(br_vector[pos] == 0){
-				printf("entro ac2\n");
+				//printf("entro ac2\n");
 				corchetes[pos_corchete] = 0;
 				pos_corchete--;
 				continue;
 			}
 			i = corchetes[pos_corchete - 1];
 		}
+		/*
 		if(w == 800)return;
 		w++;
 		
@@ -68,7 +74,7 @@ void imprimir_br(int vector[]){
 		printf("]\n");
 
 		printf("*******************************************************************\n");
-		
+		*/
 	}
 }
 bool validos(int caracter){
