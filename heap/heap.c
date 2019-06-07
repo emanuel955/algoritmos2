@@ -137,6 +137,16 @@ void *heap_ver_max(const heap_t *heap){
 	if(!heap)return NULL;
 	return heap -> datos[0];
 }
+void heap_destruir(heap_t *heap, void destruir_elemento(void *e)){
+	for(size_t i = 0; i < heap -> cant; i++){
+		heap_t* dato = heap_desencolar(heap);
+		if(destruir_elemento){
+			destruir_elemento(dato);
+		}
+	}
+	free(heap -> datos);
+	free(heap);
+}
 /**************************************************/
 /*			 heapsort							  */
 /**************************************************/

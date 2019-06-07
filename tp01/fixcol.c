@@ -10,27 +10,17 @@ void imprimir_linea(FILE* archivo,int n){
 	size_t tam = 0;
 	char* cadena;
 
-
 	while(getline(&linea, &tam, archivo) > 0){
-		//printf("%ld||%ld\n",tam, strlen(linea));
-		//int w = 0;
-		size_t avanzar = 0;
-		size_t cad_result = strlen(linea);
-		while(avanzar <= (cad_result - avanzar)){
-			//printf("%ld||%ld\n",avanzar, cad_result);
-			cadena = substr(linea + avanzar, col);
-			avanzar += col;
-			printf("%s\n",cadena);
-			//if(w==15)return;
-		}
-		//cadena = substr(linea, col);
-		//printf("%s\n",cadena);
+		printf("%ld\n",col);
+		cadena = substr(linea, col);
+		printf("%s\n",cadena);
 
-		//int cad_result = (int)strlen(linea) - n; //la cantidad de caracter que queda en cadena
-		//if(cad_result <= 0) continue;
+		int cad_result = (int)strlen(linea) - n; //la cantidad de caracter que queda en cadena
+		if(cad_result < 0) continue;
+		printf("%d\n", cad_result );
 
-		cadena = substr(linea + avanzar, (size_t) cad_result);
-		printf("%s",cadena);
+		cadena = substr(linea + col, (size_t) cad_result - 1);
+		printf("%s\n",cadena);
 	}
 	free(linea);
 
