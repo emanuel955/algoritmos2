@@ -11,19 +11,21 @@ void imprimir_linea(FILE* archivo,int n){
 	char* cadena;
 
 	while(getline(&linea, &tam, archivo) > 0){
-		printf("%ld\n",col);
-		cadena = substr(linea, col);
-		printf("%s\n",cadena);
-
-		int cad_result = (int)strlen(linea) - n; //la cantidad de caracter que queda en cadena
-		if(cad_result < 0) continue;
-		printf("%d\n", cad_result );
-
-		cadena = substr(linea + col, (size_t) cad_result - 1);
-		printf("%s\n",cadena);
+		size_t avanzar = 0;
+		int cad_result = (int) strlen(linea);
+		while(avanzar < strlen(linea)){
+			if((cad_result - avanzar) < col){
+				cadena = substr(linea + avanzar, (size_t) cad_result);
+				printf("%s",cadena);
+			}else{	
+				cadena = substr(linea + avanzar, col);
+				printf("%s\n",cadena);
+			}
+			avanzar += col;
+			free(cadena);
+		}
 	}
 	free(linea);
-
 	fclose(archivo);
 }
 
@@ -34,7 +36,7 @@ int main(int argc, char* argv[]){
 	}
 	FILE* archivo = fopen(argv[1], "r");
 	if(archivo == NULL){
-		fprintf(stderr, "Error: archivo fuente inacesible \n");
+		fprintf(stderr, "Error: archivo fuente inaccesible \n");
 		return 1;
 	} 
 	imprimir_linea(archivo,atoi(argv[2]));
