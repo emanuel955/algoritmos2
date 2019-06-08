@@ -1,31 +1,31 @@
 #define _GNU_SOURCE
-#include "strutil.h"
+//#include "strutil.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 void imprimir_linea(FILE* archivo,int n){
-	size_t col = (size_t) n;
-	char* linea = NULL;
-	size_t tam = 0;
-	char* cadena;
 
-	while(getline(&linea, &tam, archivo) > 0){
-		size_t avanzar = 0;
-		int cad_result = (int) strlen(linea);
-		while(avanzar < strlen(linea)){
-			if((cad_result - avanzar) < col){
-				cadena = substr(linea + avanzar, (size_t) cad_result);
-				printf("%s",cadena);
-			}else{	
-				cadena = substr(linea + avanzar, col);
-				printf("%s\n",cadena);
+	int cont = 0;
+	int caracter;
+	while(!feof(archivo)){
+		caracter = fgetc(archivo);
+		if(caracter < 0)continue;
+		if(caracter == '\n'){
+			if(cont != 0){
+				printf("\n");
 			}
-			avanzar += col;
-			free(cadena);
+			cont = 0;
+			continue;
 		}
+		printf("%c",caracter);
+		cont++;
+
+		if(cont == n){
+			printf("\n");
+			cont = 0;
+		}	
 	}
-	free(linea);
 	fclose(archivo);
 }
 
