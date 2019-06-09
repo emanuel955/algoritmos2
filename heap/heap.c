@@ -1,5 +1,7 @@
 #include "heap.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
 #define AUMENTA 2
 #define REDUCE 4
@@ -13,6 +15,12 @@ struct heap{
 /**************************************************/
 /*			funciones para heap 				  */
 /**************************************************/
+void swap (void** x, void** y) {
+	void* a = *x;
+	*x = *y;
+	*y = a;
+}
+
 void upheap(void** arreglo, size_t pos, cmp_func_t cmp){
 	if(pos == 0)return;
 	size_t padre = (pos - 1) / 2;
@@ -38,11 +46,7 @@ void downheap(void** arreglo, size_t cantidad, size_t pos, cmp_func_t cmp){
 		downheap(arreglo,cantidad,padre,cmp);
 	}
 }
-void swap (int* x, int* y) {
-	int a = *x, b = *y;
-	*x = b;
-	*y = a;
-}
+
 
 bool heap_redimensionar(heap_t* heap, size_t tam_nuevo) {
     void* datos_nuevo = realloc(heap->datos, tam_nuevo * sizeof(void*));
@@ -57,7 +61,7 @@ bool heap_redimensionar(heap_t* heap, size_t tam_nuevo) {
 }
 void heapify(void* arreglo[], size_t cant, cmp_func_t cmp){
 	size_t n = (cant / 2) - 1;
-	for(size_t i = n; i >= 0; i--){
+	for(size_t i = n; i > 0; i--){
 		downheap(arreglo, cant, i,cmp);
 	}
 }
@@ -72,8 +76,8 @@ heap_t *heap_crear(cmp_func_t cmp){
 
 	heap -> tam = VALOR_INICIAL;
 	heap -> cant = 0;
-	heap -> datos = malloc(heap -> capacidad * sizeof(void*));
-	if(!datos){
+	heap -> datos = malloc(heap -> tam * sizeof(void*));
+	if(! heap -> datos){
 		free(heap);
 		return NULL;
 	}
@@ -96,7 +100,7 @@ heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp){
 bool heap_encolar(heap_t *heap, void *elem){
 	if(!heap || !elem) return false;
 	heap -> datos[heap -> cant] = elem;
-	heap -> heap_cantidad++;
+	heap -> cant++;
 	upheap(heap -> datos, heap -> cant -1, heap -> cmp);
 
 	if(heap -> cant == heap -> tam){
@@ -109,22 +113,21 @@ void *heap_desencolar(heap_t *heap){
 	if(!heap)return NULL;
 	if(heap_esta_vacio(heap)) return NULL;
 
-	size_t raiz = heap -> datos[0];
-	if(heap -> cant == 1){
+	//void* raiz = heap -> datos[0];
+	/*if(heap -> cant == 1){
 		heap -> cant--;
 		return raiz;
-	}
-	size_t ultimo = heap -> dato[heap -> cant - 1];
-	swap(&raiz,&ultimo);
+	}*/
+	swap(&heap -> datos[0],&heap -> datos[heap -> cant - 1]);
 	heap -> cant --;
 
-	downheap(heap -> datos,heap -> cant,raiz,heap -> cmp);
+	downheap(heap -> datos, heap -> cant , 0, heap -> cmp);
 
 	if (heap -> cant == heap -> tam/REDUCE && heap -> cant / REDUCE > VALOR_INICIAL){
 		heap_redimensionar(heap, heap -> tam / REDUCE);
 	}
 	
-	return ultimo;
+	return heap -> datos[heap -> cant];
 }
 size_t heap_cantidad(const heap_t *heap){
 	return heap -> cant;
@@ -135,6 +138,8 @@ bool heap_esta_vacio(const heap_t *heap){
 }
 void *heap_ver_max(const heap_t *heap){
 	if(!heap)return NULL;
+	if(heap_esta_vacio(heap)) return NULL;
+	printf("dato = %d\n", *(int*) heap -> datos[0]);
 	return heap -> datos[0];
 }
 void heap_destruir(heap_t *heap, void destruir_elemento(void *e)){
@@ -151,9 +156,9 @@ void heap_destruir(heap_t *heap, void destruir_elemento(void *e)){
 /*			 heapsort							  */
 /**************************************************/
 void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp){
-	for(size_t i = cant - 1; i >= 0; i--){
-		swap(&elementos[0],&elementos[i]);
+	for(size_t i = cant - 1; i > 0; i--){
 		heapify(elementos,i,cmp);
+		swap(elementos[0],elementos[i]);
 	}
 
 }
