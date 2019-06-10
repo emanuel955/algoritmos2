@@ -1,0 +1,78 @@
+PRUEBA CON CADENAS 
+ESTAN A ENCOLAR
+---------------antes UPHEAP= como||como
+encolar como... OK
+ESTAN A ENCOLAR
+---------------antes UPHEAP= como||abc
+pos padre/hijo = 0|1
+restultado de la comparacion = 1
+valor pa|hi ANTES SWAP= como||abc
+valor pa|hi DESPUES SWAP= abc||como
+encolar abc... OK
+ver maximo es como... OK
+ESTAN A ENCOLAR
+---------------antes UPHEAP= abc||hola
+pos padre/hijo = 0|2
+restultado de la comparacion = -1
+encolar hola... OK
+ver maximo es hola... OK
+cantidad es 3... OK
+ESTAN A ENCOLAR
+---------------antes UPHEAP= abc||chau
+pos padre/hijo = 1|3
+restultado de la comparacion = 1
+valor pa|hi ANTES SWAP= como||chau
+valor pa|hi DESPUES SWAP= chau||como
+pos padre/hijo = 0|1
+restultado de la comparacion = -1
+encolar chau... OK
+ver maximo es abc... OK
+ESTAN A ENCOLAR
+---------------antes UPHEAP= abc||arcp
+pos padre/hijo = 1|4
+restultado de la comparacion = 1
+valor pa|hi ANTES SWAP= chau||arcp
+valor pa|hi DESPUES SWAP= arcp||chau
+pos padre/hijo = 0|1
+restultado de la comparacion = -1
+encolar arcp... OK
+ver maximo es arcp... OK
+ENTRA A PRIMITIVA DESENCOLAR
++++++++++++antes swap = abc||chau
++++++++++++++++despues swap = chau||abc
+padre/izq/der = 0|1|2
+restultado de la comparacion = -1
+----------cambio padre por izq
+restultado de la comparacion = 1
+pos != padre entra al swap= 0|1
+valor pa|hi antes swap = arcp||chau
+valor pa|hi despues swap= chau||arcp
+padre/izq/der = 1|3|4
+restultado de la comparacion = 1
+pos != padre entra al swap= 1|1
+desencolar abc... OK
+ver maximo es arcp... OK
+ENTRA A PRIMITIVA DESENCOLAR
++++++++++++antes swap = arcp||como
++++++++++++++++despues swap = como||arcp
+padre/izq/der = 0|1|2
+restultado de la comparacion = -1
+----------cambio padre por izq
+restultado de la comparacion = 1
+pos != padre entra al swap= 0|1
+valor pa|hi antes swap = chau||como
+valor pa|hi despues swap= como||chau
+padre/izq/der = 1|3|4
+pos != padre entra al swap= 1|1
+ENTRA A PRIMITIVA DESENCOLAR
++++++++++++antes swap = chau||hola
++++++++++++++++despues swap = hola||chau
+padre/izq/der = 0|1|2
+restultado de la comparacion = -1
+----------cambio padre por izq
+pos != padre entra al swap= 0|1
+valor pa|hi antes swap = como||hola
+valor pa|hi despues swap= hola||como
+padre/izq/der = 1|3|4
+pos != padre entra al swap= 1|1
+DESTRUYO EL HEAP... OK

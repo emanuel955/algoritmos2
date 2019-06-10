@@ -12,7 +12,7 @@ int comparar_max(const void *a, const void *b){
 	return *(int*)b - *(int*)a;
 }
 int comp_cad(const void *a, const void *b){
-	printf("comparacion = %d\n",strcmp(a,b));
+	printf("restultado de la comparacion = %d\n",strcmp(a,b));
 	return strcmp(a,b);
 }
 
@@ -97,8 +97,9 @@ void pruebas_cadena(){
 	char e[] = "hola";
 	char f[] = "como";
 	char k[] = "abc";
+	char d[] = "arcp";
 	
-	print_test("encolar chau", heap_encolar(heap,&i) == true);
+	print_test("encolar como", heap_encolar(heap,&f) == true);
 	print_test("encolar abc", heap_encolar(heap,&k) == true);
 	print_test("ver maximo es como",heap_ver_max(heap) == &k);
 
@@ -106,13 +107,16 @@ void pruebas_cadena(){
 	print_test("ver maximo es hola",heap_ver_max(heap) == &k);
 
 	print_test("cantidad es 3",heap_cantidad(heap) == 3);
-	print_test("encolar como", heap_encolar(heap,&f) == true);
+	print_test("encolar chau", heap_encolar(heap,&i) == true);
 	print_test("ver maximo es abc",heap_ver_max(heap) == &k);
 
-	print_test("desencolar abc", heap_desencolar(heap) == &k);
-	print_test("ver maximo es chau",heap_ver_max(heap) == &i);
+	print_test("encolar arcp", heap_encolar(heap,&d) == true);
+	print_test("ver maximo es arcp",heap_ver_max(heap) == &k);
 
-	print_test("desencolar chau", heap_desencolar(heap) == &i);
+	print_test("desencolar abc", heap_desencolar(heap) == &k);
+	print_test("ver maximo es arcp",heap_ver_max(heap) == &d);
+
+	//print_test("desencolar chau", heap_desencolar(heap) == &i);
 	//print_test("ver maximo es como",heap_ver_max(heap) == &f);
 
 	heap_destruir(heap,NULL);
