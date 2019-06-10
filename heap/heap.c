@@ -24,9 +24,12 @@ void swap (void** x, void** y) {
 void upheap(void** arreglo, size_t pos, cmp_func_t cmp){
 	if(pos == 0)return;
 	size_t padre = (pos - 1) / 2;
-	if(cmp(arreglo[padre],arreglo[pos])>0){
-		swap(&arreglo[padre],&arreglo[pos]);
-		upheap(arreglo,padre,cmp);
+	//printf("pos padre/hijo = %ld|%ld\n",padre,pos);
+	if(cmp(arreglo[padre],arreglo[pos])>0){//si padre mayor a hijo
+		//printf("valor pa|hi = %s||%s\n",(char*)arreglo[padre],(char*)arreglo[pos]);
+		swap(&arreglo[padre],&arreglo[pos]);//lo cambia
+		//printf("valor pa|hi = %s||%s\n",(char*)arreglo[padre],(char*)arreglo[pos]);
+		upheap(arreglo,padre,cmp);//si tiene padre(osea != raiz)
 	}
 
 }
@@ -35,14 +38,20 @@ void downheap(void** arreglo, size_t cantidad, size_t pos, cmp_func_t cmp){
 	size_t padre = pos;
 	size_t izq = 2 * pos + 1;
 	size_t der = 2 * pos + 2;
+	printf("padre/izq/der = %ld|%ld|%ld\n",padre,izq,der);
 	if(izq < cantidad && cmp(arreglo[izq],arreglo[padre])<0){
+		printf("----------cambio izq\n");
 		padre = izq;
 	}
 	if(der < cantidad && cmp(arreglo[der],arreglo[padre])<0){
+		printf("----------cambio der\n");
 		padre = der;
 	}
+	printf("pos/ padre = %ld|%ld\n",pos,padre);
 	if(padre != pos){
+		printf("valor pa|hi = %s||%s\n",(char*)arreglo[padre],(char*)arreglo[pos]);
 		swap(&arreglo[pos],&arreglo[padre]);
+		printf("valor pa|hi = %s||%s\n",(char*)arreglo[padre],(char*)arreglo[pos]);
 		downheap(arreglo,cantidad,padre,cmp);
 	}
 }
@@ -101,7 +110,9 @@ bool heap_encolar(heap_t *heap, void *elem){
 	if(!heap || !elem) return false;
 	heap -> datos[heap -> cant] = elem;
 	heap -> cant++;
-	upheap(heap -> datos, heap -> cant -1, heap -> cmp);
+	upheap(heap -> datos, heap -> cant - 1, heap -> cmp);
+	
+	//printf("--------------------antes = %d||%d\n",*(int*)heap -> datos[0],*(int*)heap -> datos[heap -> cant - 1] );
 
 	if(heap -> cant == heap -> tam){
 		bool estado = heap_redimensionar(heap, AUMENTA * heap -> tam);
@@ -118,7 +129,9 @@ void *heap_desencolar(heap_t *heap){
 		heap -> cant--;
 		return raiz;
 	}*/
+	printf("+++++++++++antes = %s||%s\n",(char*)heap -> datos[0],(char*)heap -> datos[heap -> cant - 1] );
 	swap(&heap -> datos[0],&heap -> datos[heap -> cant - 1]);
+	printf("+++++++++++++++despues = %s||%s\n",(char*)heap -> datos[0],(char*)heap -> datos[heap -> cant - 1] );
 	heap -> cant --;
 
 	downheap(heap -> datos, heap -> cant , 0, heap -> cmp);
@@ -139,7 +152,7 @@ bool heap_esta_vacio(const heap_t *heap){
 void *heap_ver_max(const heap_t *heap){
 	if(!heap)return NULL;
 	if(heap_esta_vacio(heap)) return NULL;
-	printf("dato = %d\n", *(int*) heap -> datos[0]);
+	//printf("dato = %d\n", *(int*) heap -> datos[0]);
 	return heap -> datos[0];
 }
 void heap_destruir(heap_t *heap, void destruir_elemento(void *e)){
