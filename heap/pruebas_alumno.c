@@ -5,10 +5,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-int comparar_min(const void *a, const void *b){
+int comparar_a_b(const void *a, const void *b){
 	return *(int*)a - *(int*)b;
 }
-int comparar_max(const void *a, const void *b){
+int comparar_b_a(const void *a, const void *b){
 	return *(int*)b - *(int*)a;
 }
 int comp_cad(const void *a, const void *b){
@@ -20,7 +20,7 @@ int b = 8;
 int c = 7;
 void prueba_vacio_y_null(){
 	printf("PRUEBAS VACIO Y NULL\n");
-	heap_t* heap = heap_crear(comparar_min);
+	heap_t* heap = heap_crear(comparar_a_b);
 
 	print_test("esta vacio", heap_esta_vacio(heap) == true);
 	print_test("desencolar es null",heap_desencolar(heap) == NULL);
@@ -35,7 +35,7 @@ void prueba_vacio_y_null(){
 }
 void prueba_un_elemento(){
 	printf("PRUEBA UN ELEMENTO\n");
-	heap_t* heap = heap_crear(comparar_min);
+	heap_t* heap = heap_crear(comparar_a_b);
 
 	print_test("encolar a = 3", heap_encolar(heap,&a) == true);
 	print_test("no esta vacio", heap_esta_vacio(heap) == false);
@@ -54,7 +54,7 @@ void prueba_un_elemento(){
 int x=5,y=9,z=10,w=2,q=71,r=1;
 void prueba_heap_min(){
 	printf("PRUEBA HEAP Max\n");
-	heap_t* heap = heap_crear(comparar_min);
+	heap_t* heap = heap_crear(comparar_a_b);
 
 	print_test("encolar x = 5", heap_encolar(heap,&x) == true);
 	print_test("encolar y = 9", heap_encolar(heap,&y) == true);
@@ -102,7 +102,7 @@ void prueba_heap_min(){
 }
 void prueba_heap_max(){
 	printf("PRUEBA HEAP Min\n");
-	heap_t* heap = heap_crear(comparar_max);
+	heap_t* heap = heap_crear(comparar_b_a);
 
 	print_test("encolar x = 5", heap_encolar(heap,&x) == true);
 	print_test("encolar y = 9", heap_encolar(heap,&y) == true);
@@ -151,7 +151,7 @@ void prueba_arreglo(){
 	printf("PRUEBA ARREGLO \n");
 	int pos1 = 5, pos2 = 9, pos3 = 10, pos4 = 2, pos5 = 71, pos6 = 1;
 	void* arreglo[] = {&pos1,&pos2,&pos3,&pos4,&pos5,&pos6};
-	heap_t* heap = heap_crear_arr(arreglo,6,comparar_min);
+	heap_t* heap = heap_crear_arr(arreglo,6,comparar_a_b);
 
 	print_test("el maximo es 71", heap_ver_max(heap) == &pos5);
 	print_test("cantidad es 6",heap_cantidad(heap) == 6);
@@ -168,7 +168,7 @@ static void borrar(void* num){
 }
 void pruebas_destruir(){
 	printf("PRUEBA DESTRUIR \n");
-	heap_t* heap = heap_crear(comparar_min);
+	heap_t* heap = heap_crear(comparar_a_b);
 
 	int* uno = malloc(sizeof(int));
 	int* dos = malloc(sizeof(int));
@@ -189,12 +189,27 @@ void prueba_heapsort(){
 	int pos1 = 5, pos2 = 9, pos3 = 10, pos4 = 2, pos5 = 71, pos6 = 1;
 	void* arreglo[6] = {&pos1,&pos2,&pos3,&pos4,&pos5,&pos6};
 
-	heap_sort(arreglo,6,comparar_min);
+	heap_sort(arreglo,6,comparar_a_b);
 
 	for(int i = 0; i < 6; i++){
 		printf("%d\n",*(int*)arreglo[i]);
 	}
 
+}
+void prueba_volumen(){
+	bool ok = true;
+	heap_t* heap = heap_crear(comparar_a_b);
+	int v[500];
+	for(int i=0; i < 500; i++){
+		v[i] = i;
+		ok &= heap_encolar(heap, &v[i]);
+	}
+	print_test("se pudieron guardar todos los elementos", ok);
+	for(int i=0; i < 200 ; i++){
+		heap_desencolar(heap);
+	}
+	print_test("se pudieron desencolar 200 los elementos", ok);
+	heap_destruir(heap,NULL);
 }
 
 void pruebas_heap_alumno(void){
@@ -205,5 +220,6 @@ void pruebas_heap_alumno(void){
 	prueba_arreglo();
 	pruebas_destruir();
 	prueba_heapsort();
+	prueba_volumen();
 
 }

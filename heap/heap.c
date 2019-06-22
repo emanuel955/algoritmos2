@@ -5,6 +5,7 @@
 
 #define AUMENTA 2
 #define REDUCE 4
+#define VALOR_INICIAL 20
 
 struct heap{
 	void** datos;
@@ -69,7 +70,7 @@ void heapify(void* arreglo[], size_t cant, cmp_func_t cmp){
 /**************************************************/
 /*			primitivas del heap 				  */
 /**************************************************/
-#define VALOR_INICIAL 20
+
 heap_t *heap_crear(cmp_func_t cmp){
 	heap_t* heap = malloc(sizeof(heap_t));
 	if(!heap) return NULL;
@@ -98,14 +99,13 @@ heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp){
 }
 bool heap_encolar(heap_t *heap, void *elem){
 	if(!heap || !elem) return false;
-	heap -> datos[heap -> cant] = elem;
-	heap -> cant++;
-	upheap(heap -> datos, heap -> cant - 1, heap -> cmp);
-
 	if(heap -> cant == heap -> tam){
 		bool estado = heap_redimensionar(heap, AUMENTA * heap -> tam);
 		if(!estado) return false;
 	}
+	heap -> datos[heap -> cant] = elem;
+	heap -> cant++;
+	upheap(heap -> datos, heap -> cant - 1, heap -> cmp);
 	return true;
 }
 void *heap_desencolar(heap_t *heap){
@@ -130,7 +130,7 @@ size_t heap_cantidad(const heap_t *heap){
 }
 bool heap_esta_vacio(const heap_t *heap){
 	if(!heap) return false;
-	return heap -> cant == 0;
+	return heap_cantidad(heap) == 0;
 }
 void *heap_ver_max(const heap_t *heap){
 	if(!heap)return NULL;
@@ -138,6 +138,7 @@ void *heap_ver_max(const heap_t *heap){
 	return heap -> datos[0];
 }
 void heap_destruir(heap_t *heap, void destruir_elemento(void *e)){
+	if(!heap)return;
 	for(size_t i = 0; i < heap -> cant; i++){
 		if(destruir_elemento){
 			destruir_elemento(heap -> datos[i]);
