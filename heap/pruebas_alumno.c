@@ -191,8 +191,15 @@ void prueba_heapsort(){
 
 	heap_sort(arreglo,6,comparar_a_b);
 
-	for(int i = 0; i < 6; i++){
-		printf("%d\n",*(int*)arreglo[i]);
+	int dato = *(int*)arreglo[0];
+	bool ok = true;
+	for(int i = 1; i < 6; i++){
+		if(dato > *(int*)arreglo[i]){
+			ok = false;
+			print_test("actual es menor que el anterior",ok);
+			break;
+		}
+		print_test("actual es mayor que el anterior",ok);
 	}
 
 }
