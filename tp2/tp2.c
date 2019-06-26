@@ -6,6 +6,7 @@
 #include "hash.h"
 
 #define CANTIDAD 128
+#define MAX 15 //long max de nombre usuario
 void destruir_dato(void* dato){
 	hash_destruir(dato);
 }
@@ -17,18 +18,31 @@ void couting_sort_simple(hash_t* hash){
 	while(!hash_iter_al_final(iter)){
 		char* clave = (char*)hash_iter_ver_actual(iter);
 		arr[contador] = clave;
+		arr[contador][strlen(clave)]='\0';
 		contador++;
 		hash_iter_avanzar(iter);
 	}
 	hash_iter_destruir(iter);
 
-	size_t cant = hash_cantidad(hash);
+	/*size_t cant = hash_cantidad(hash);
+	for(size_t j = 0; j < cant;i++){
+		printf("%s\n",arr[j]);
+	}*/
 
-	for(size_t i = 0; i < cant;i++){
-		printf("%s\n",arr[i]);
-		free(arr[i]);
+	for(int i = 0; i < MAX; i++){//recorre por letra
+		for(int j = 0; j < contador;j++){//recorre la lista
+			char* usuario = arr[j];
+			int posicion;
+			if(strlen(usuario) < i){
+				posicion = usuario[0];
+			}else{
+				posicion = usuario[strlen(arr[i])-1];
+			}
+			printf("%s||%d\n",usuario,posicion);
+		}
+
 	}
-	//free(arr);
+	free(arr);
 }
 void cant_tuit_por_usuario(const char* linea, hash_t* hash){
 	char** vector = split(linea,',');
