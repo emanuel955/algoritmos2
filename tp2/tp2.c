@@ -5,48 +5,55 @@
 #include "strutil.h"
 #include "hash.h"
 
+#define CANTIDAD 128
+void destruir_dato(void* dato){
+	hash_destruir(dato);
+}
 void couting_sort_simple(hash_t* hash){
+	char** arr = malloc(sizeof(char*) * CANTIDAD);
+	int contador = 0;
+
 	hash_iter_t* iter = hash_iter_crear(hash);
-
 	while(!hash_iter_al_final(iter)){
-		const char* clave = hash_iter_ver_actual(iter);
-		hash_t* valor = hash_obtener(hash,clave);
-
-		size_t cant = hash_cantidad(valor);
-		printf("%s||%ld\n", clave,cant );
+		char* clave = (char*)hash_iter_ver_actual(iter);
+		arr[contador] = clave;
+		contador++;
 		hash_iter_avanzar(iter);
 	}
 	hash_iter_destruir(iter);
+
+	size_t cant = hash_cantidad(hash);
+
+	for(size_t i = 0; i < cant;i++){
+		printf("%s\n",arr[i]);
+		free(arr[i]);
+	}
+	//free(arr);
 }
 void cant_tuit_por_usuario(const char* linea, hash_t* hash){
 	char** vector = split(linea,',');
 	if(strlen(vector[0]) > 15)return;
-	//printf("FUNCION usuario = %s\n", vector[0]);
+
 	hash_t* hash_tuit = hash_obtener(hash, vector[0]); //devulve un hash o NULL
 	if(!hash_tuit){
-		//printf("ENTRO EN EL DATO NO ES HASH\n");
 		hash_tuit = hash_crear(free);//si no esta el usuario lo guarda junto con un hash
 		hash_guardar(hash,vector[0],hash_tuit);
 	}
 	free(vector[0]);
 	for(size_t i = 1; vector[i] != NULL; i++){
-		//printf("------- %s\n", vector[i]);
-		char* tag = vector[]//sacar en /n
 		hash_guardar(hash_tuit,vector[i],NULL);
 		free(vector[i]);
 	}
 	free(vector);
-	//printf("\n");
 }
-void destruir_dato(void* dato){
-	hash_destruir(dato);
-}
+
 void leer_archivo(FILE* archivo){
 	hash_t* hash_usuario = hash_crear(destruir_dato);
 
 	char* linea = NULL;
 	size_t bytes_leidos;
 	while((getline( &linea, &bytes_leidos, archivo)) > 0){
+		linea[strlen(linea) - 1] = '\0';//elimina \n
 		cant_tuit_por_usuario(linea,hash_usuario);
 	};
 	free(linea);
