@@ -8,9 +8,14 @@
 
 #define CANTIDAD 128
 #define MAX 15 //long max de nombre usuario
-void destruir_dato(void* dato){
-	hash_destruir(dato);
+
+void eliminar(void** vector, int contador2){
+	for (int i = 0; i < CANTIDAD; ++i){
+		lista_destruir(vector[i],NULL);
+	}
+	free(vector);
 }
+
 void couting_sort_simple(hash_t* hash){
 	char** arr = malloc(sizeof(char*) * CANTIDAD);
 	int contador = 0;
@@ -24,62 +29,55 @@ void couting_sort_simple(hash_t* hash){
 	}
 	hash_iter_destruir(iter);
 
-	/*size_t cant = hash_cantidad(hash);
-	for(size_t j = 0; j < cant;i++){
-		printf("%s\n",arr[j]);
-	}*/
 	void** baldes = malloc(sizeof(void*) * CANTIDAD);
-	for(int k = 0; k < CANTIDAD; k++)baldes[k] = NULL;//inicializo los baldes
+	for(int k = 0; k < CANTIDAD; k++)baldes[k] = lista_crear();//inicializo los baldes
 	lista_t* listas;
+	lista_t* lista;
 
-
-	for(size_t i = 0; i < 2; i++){//recorre por letra
-		
+	for(size_t i = 0; i < MAX; i++){//recorre por letra
 		for(int j = 0; j < contador;j++){//recorre la lista de usuarios
 			char* usuario = arr[j];
-			//printf("%s||%ld\n",usuario,strlen(usuario) );
 			int posicion;
-			if(strlen(usuario) < i){
-				//printf("**********USUARIO MENOR QUE I\n");
+			if((strlen(usuario)-1) < i){
 				posicion = usuario[0];
 			}else{
 				posicion = usuario[strlen(arr[j])-1-i];
-				//printf("**********USUARIO MAYOR QUE I = %ld\n",strlen(arr[j])-1-i);
 			}
-			//printf("%s||%d\n",usuario,posicion);
+			printf("---------%s||%c\n",usuario,posicion);
 			listas = baldes[posicion];
-			if(!listas){
-				printf("**********CREO LA LISTA\n");
-				listas = lista_crear();
-				baldes[posicion] = listas;
-			}
 			lista_insertar_ultimo(listas,usuario);
 		}
 		int contador2 = 0;
 		for(int p = 0; p < CANTIDAD; p++){
-			if(baldes[p] == NULL)continue;
-			lista_t* lista = baldes[p];
-			lista_iter_t* iter = lista_iter_crear(lista);
+			
+			if(lista_esta_vacia(baldes[p]))continue;
+			lista = baldes[p];
+			lista_iter_t* iter1 = lista_iter_crear(lista);
 
-			while(!lista_iter_al_final(iter)){
-				char* nombre = (char*)lista_iter_borrar(iter);
-				//printf("%s\n",nombre );
+			while(!lista_iter_al_final(iter1)){
+				char* nombre = (char*)lista_iter_borrar(iter1);
 				arr[contador2] = nombre;
 				contador2++;	
 			}
-			lista_iter_destruir(iter);
-			//lista_destruir(lista,NULL);
-			
+			lista_iter_destruir(iter1);
 		}
-		printf("%d||%d\n",contador2,contador );
+		size_t cant = hash_cantidad(hash);
+		for(size_t w = 0; w < cant;w++){
+			printf("%s\n",arr[w]);
+		}
+		printf("\n");
 	}
-	size_t cant = hash_cantidad(hash);
+
+	/*size_t cant = hash_cantidad(hash);
 	for(size_t w = 0; w < cant;w++){
 		printf("%s\n",arr[w]);
-	}
-	lista_destruir(listas,NULL);
-	free(baldes);
+	}*/
+	
+	eliminar(baldes,contador);
 	free(arr);
+}
+void destruir_dato(void* dato){
+	hash_destruir(dato);
 }
 void cant_tuit_por_usuario(const char* linea, hash_t* hash){
 	char** vector = split(linea,',');
