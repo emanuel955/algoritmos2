@@ -15,11 +15,45 @@ void eliminar(void** vector, int contador2){
 	}
 	free(vector);
 }
+void orden_numerico(hash_t* hash, char** arr){
+	//creo baldes
+	void** baldes = malloc(sizeof(void*) * CANTIDAD);
+	for(int k = 0; k < CANTIDAD; k++)baldes[k] = lista_crear();//inicializo los baldes
 
-void couting_sort_simple(hash_t* hash){
-	char** arr = malloc(sizeof(char*) * CANTIDAD);
+	size_t cant = hash_cantidad(hash);
+	for(int i = 0; i < cant; i++){
+		char* usuario = arr[i];
+		hash_t* hash_tag = hash_obtener(hash, arr[i]);
+		size_t posicion = hash_cantidad(hash_tag);
+
+		lista_t* lista = baldes[posicion];
+		lista_insertar_ultimo(lista,usuario);
+	}
+
+	int contador = 1;
+	for(int p = 0; p < CANTIDAD; p++){//recorre la lista que hat dentro de los baldes
+			
+		if(lista_esta_vacia(baldes[p]))continue;
+		lista_t* lista = baldes[p];
+		lista_iter_t* iter1 = lista_iter_crear(lista);
+		printf("%d. ",p );
+		while(!lista_iter_al_final(iter1)){
+			char* nombre = (char*)lista_iter_borrar(iter1);
+			printf("%s. ",nombre );
+			contador++;	
+		}
+		printf("\n");
+		lista_iter_destruir(iter1);
+	}
+	eliminar(baldes,CANTIDAD);
+
+}
+
+void orden_alfabetico(hash_t* hash, size_t tam){
+	char** arr = malloc(sizeof(char*) * tam);
 	int contador = 0;
 
+	//pongo los usuarios en un arreglo
 	hash_iter_t* iter = hash_iter_crear(hash);
 	while(!hash_iter_al_final(iter)){
 		char* clave = (char*)hash_iter_ver_actual(iter);
@@ -29,29 +63,27 @@ void couting_sort_simple(hash_t* hash){
 	}
 	hash_iter_destruir(iter);
 
+	//creo baldes
 	void** baldes = malloc(sizeof(void*) * CANTIDAD);
 	for(int k = 0; k < CANTIDAD; k++)baldes[k] = lista_crear();//inicializo los baldes
-	lista_t* listas;
-	lista_t* lista;
 
 	for(size_t i = 0; i < MAX; i++){//recorre por letra
 		for(int j = 0; j < contador;j++){//recorre la lista de usuarios
 			char* usuario = arr[j];
 			int posicion;
-			if((strlen(usuario)-1) < i){
-				posicion = usuario[0];
+			if((strlen(usuario)-1) < (MAX-1)-i){
+				posicion = '_';
 			}else{
-				posicion = usuario[strlen(arr[j])-1-i];
+				posicion = usuario[MAX-1-i];
 			}
-			printf("---------%s||%c\n",usuario,posicion);
-			listas = baldes[posicion];
+			lista_t* listas = baldes[posicion];
 			lista_insertar_ultimo(listas,usuario);
 		}
 		int contador2 = 0;
-		for(int p = 0; p < CANTIDAD; p++){
+		for(int p = 0; p < CANTIDAD; p++){//recorre la lista que hat dentro de los baldes
 			
 			if(lista_esta_vacia(baldes[p]))continue;
-			lista = baldes[p];
+			lista_t* lista = baldes[p];
 			lista_iter_t* iter1 = lista_iter_crear(lista);
 
 			while(!lista_iter_al_final(iter1)){
@@ -61,17 +93,8 @@ void couting_sort_simple(hash_t* hash){
 			}
 			lista_iter_destruir(iter1);
 		}
-		size_t cant = hash_cantidad(hash);
-		for(size_t w = 0; w < cant;w++){
-			printf("%s\n",arr[w]);
-		}
-		printf("\n");
 	}
-
-	/*size_t cant = hash_cantidad(hash);
-	for(size_t w = 0; w < cant;w++){
-		printf("%s\n",arr[w]);
-	}*/
+	orden_numerico(hash,arr);
 	
 	eliminar(baldes,contador);
 	free(arr);
@@ -106,7 +129,8 @@ void leer_archivo(FILE* archivo){
 		cant_tuit_por_usuario(linea,hash_usuario);
 	};
 	free(linea);
-	couting_sort_simple(hash_usuario);
+	size_t tam = hash_cantidad(hash_usuario);
+	orden_alfabetico(hash_usuario, tam);
 
 	hash_destruir(hash_usuario);
 }
