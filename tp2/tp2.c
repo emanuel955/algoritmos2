@@ -36,7 +36,7 @@ void orden_numerico(hash_t* hash, char** arr){
 		if(lista_esta_vacia(baldes[p]))continue;
 		lista_t* lista = baldes[p];
 		lista_iter_t* iter1 = lista_iter_crear(lista);
-		printf("%d. ",p );
+		printf("%d: ",p );
 		while(!lista_iter_al_final(iter1)){
 			char* nombre = (char*)lista_iter_borrar(iter1);
 			printf("%s. ",nombre );
